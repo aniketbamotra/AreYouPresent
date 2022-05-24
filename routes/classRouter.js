@@ -6,22 +6,19 @@ const { Class } = require("../models/classModel.js");
 
 const classRouter = express.Router();
 
-// localhost:5000/api/class/:classId
+// http://localhost:5000/api/class/new-class
 classRouter.post(
-  "/:classId",
+  "/new-class",
   expressAsyncHandler(async (req, res) => {
     try {
-      const addClass = new Class({
+      const newClass = new Class({
         name: req.body.name,
         class_teacher: req.body.class_teacher,
       });
-      const addedClass = await addClass.save();
-      res.send({
-        name: addedClass.name,
-        class_teacher: addedClass.class_teacher,
-      });
+      await newClass.save();
+      res.status(200).json({ status: "Success", message: newClass });
     } catch (err) {
-      console.log(err);
+      res.status(500).json({ status: "Error", message: err.message });
     }
   })
 );
